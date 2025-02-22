@@ -63,7 +63,7 @@ type FormValues = z.infer<typeof formSchema>;
 export default function StoreCreation() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [domainChecking, setDomainChecking] = useState(false);
-  const [domainStatus, setDomainStatus] = useState<boolean | null>(null);
+  const [domainTaken, setdomainTaken] = useState<boolean | null>(null);
   const [formMessage, setFormMessage] = useState<string | null>(null);
   const [formMessageType, setFormMessageType] = useState<
     "error" | "success" | null
@@ -99,10 +99,10 @@ export default function StoreCreation() {
             `${process.env.NEXT_PUBLIC_API_ENDPOINT}/task/domains/check/${domainValue}.expressitbd.com`
           );
           const taken = response.data.data.taken;
-          setDomainStatus(taken);
+          setdomainTaken(taken);
           await trigger("domain");
         } catch {
-          setDomainStatus(null);
+          setdomainTaken(null);
         } finally {
           setDomainChecking(false);
         }
@@ -201,12 +201,12 @@ export default function StoreCreation() {
               <input
                 {...register("domain")}
                 placeholder="Enter your domain name"
-                className="w-full pr-24 rounded-md border-gray-300 border focus:border-blue-500 focus:ring-blue-500 p-2"
+                className="mt-1 w-full pr-24 rounded-md border-gray-300 border focus:border-blue-500 focus:ring-blue-500 p-2"
               />
-              <span className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 bg-transparent pointer-events-none">
+              <span className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-500 bg-transparent pointer-events-none leading-none text-sm">
                 .expressitbd.com
               </span>
-              <div className="mt-2 flex items-center">
+              <div className="flex items-center">
                 {domainChecking ? (
                   <span className="text-gray-500 text-sm">
                     Checking availability...
@@ -215,11 +215,11 @@ export default function StoreCreation() {
                   <span className="text-red-500 text-sm">
                     {errors.domain.message}
                   </span>
-                ) : domainStatus === false ? (
+                ) : domainTaken === false ? (
                   <span className="text-green-500 text-sm">
                     Domain available!
                   </span>
-                ) : domainStatus === true ? (
+                ) : domainTaken === true ? (
                   <span className="text-red-500 text-sm">
                     Domain is already taken!
                   </span>
